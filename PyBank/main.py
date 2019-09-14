@@ -3,7 +3,6 @@
 import csv
 import os
 
-
 #Identify csv file
 csvpath = os.path.join("Resources", "budget_data.csv")
 
@@ -24,15 +23,8 @@ with open(csvpath, newline="") as csvfile:
     #skip first header row in csv file
     csvHeader = next(csvreader)
 
-    #store the first row of data so it doesn't screw the average change
-    csvRows=list(cvsreader)
-    storeFirstRow=csvRows[0]
-
     for row in csvreader:
     
-        if storeFirstRow == row:
-
-        else :
             if float(row[1])>profit:
                 #store greatest profit
                 profit = float(row[1])-previous
