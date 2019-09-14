@@ -12,7 +12,6 @@ totalAmount=0
 sumChange=0
 profit = 0
 loss = 0
-#used to store the profit/loss from the previous row
 previous = 0 
 
 #Open the file using the "write" mode
@@ -24,7 +23,10 @@ with open(csvpath, newline="") as csvfile:
     csvHeader = next(csvreader)
 
     for row in csvreader:
-    
+
+        #ensure first line is skipped to calculate average change
+        if previous != 0:
+
             if float(row[1])>profit:
                 #store greatest profit
                 profit = float(row[1])-previous
@@ -35,24 +37,25 @@ with open(csvpath, newline="") as csvfile:
                 loss = float(row[1])-previous
                 lossPeriod = (row[0])
 
-            #track total number of months
-            totalMonths=totalMonths+1
-
             #calculate average of the changes in profit/loss over entire period
             #calculate change from previous month
             change=float(row[1])-previous
             sumChange=sumChange+change
 
-            #calculate net total amount
-            totalAmount=totalAmount+float(row[1])
+        #exclude from if statement so first row is included
 
-            #store the profit/loss to use for the next iteration
-            previous=float(row[1])
+        #track total number of months
+        totalMonths=totalMonths+1
 
+        #store the current profit/loss to use for the next iteration
+        previous=float(row[1])
 
-        
+        #calculate net total amount
+        totalAmount=totalAmount+float(row[1])
+    
     #calculate the average of the changes in profit/loss over entire period
-    averageChange = sumChange/totalMonths
+    #subtrate 1 to eliminate first month from average
+    averageChange = (sumChange)/(totalMonths-1)
 
     print("Financial Analysis")
     print("--------------------------------")
@@ -72,7 +75,10 @@ with open(csvpath, newline="") as csvfile:
 #create a txt file with the information
 file = open("pybankStore.txt", "w")
     
-textlist = [f"Total: {str(totalAmount)}",
+textlist = [f"Financial Analysis",
+        f"--------------------------------",
+        f"Total Months: {str(totalMonths)}",
+        f"Total: {str(totalAmount)}",
         f"Average Change: {str(averageChange)}",
         f"Greatest Increase in Profits: ({profitPeriod}) {str(profit)}",
         f"Greatest Decrease in Profits: ({lossPeriod}) {str(loss)}",
